@@ -33,9 +33,9 @@ read_sql_query <- function(filepath, encoding = "latin1"){
 #' @examples
 #' 
 #' query <- read_sql_query(paste0("sql/alamer_VNE4.sql"))
-#' imported_file <- import_from_VNE(query)
+#' imported_file <- import_from_vne(query)
 
-import_from_VNE <- function(query){
+import_from_vne <- function(query){
   readRenviron(".env")
   # load required package
   require("RPostgreSQL", quietly = TRUE)

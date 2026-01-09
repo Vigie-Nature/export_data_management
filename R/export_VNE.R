@@ -50,7 +50,8 @@ for (i in seq_along(protocoles_query)){
   imported_file_geometry$taxon_count_description <- hutils::Switch(protocoles_query[i], DEFAULT = "abondance", 
                  "alamer" = "classe_abondance",
                  "spipoll_VNE" = "classe_abondance",
-                 "lichens" = "classe_abondance")
+                 "lichens" = "classe_abondance",
+                 "sauvages" = "presence")
   
   # save file
   dir.create("data")
