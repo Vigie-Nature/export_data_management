@@ -6,23 +6,24 @@ source("R/functions_ftp.R")
 
 
 # list of the protocols to upload
-protocoles_query <- c("alamer",
+data_queries <- c("alamer",
                       "escargots",
                       "oiseaux",
                       "sauvages",
                       "vdt",
                       "spipoll_VNE",
                       "biolit",
-                      "lichens"
+                      "lichens",
+                      "participation_observations"
 )
 
 # import and process file loop ----
-for (i in seq_along(protocoles_query)){
-  cat(paste("Importation des données", protocoles_query[i]))
+for (i in seq_along(data_queries)){
+  cat(paste("Importation des données", data_queries[i]))
   
   # import file from database ----
-  query <- read_sql_query(paste0("sql/", protocoles_query[i], "_VNE4.sql"))
-  imported_file <- import_from_VNE(query)
+  query <- read_sql_query(paste0("sql/", data_queries[i], "_VNE4.sql"))
+  imported_file <- import_from_vne(query)
   cat("       ok\n")
   
   # add missing columns or transform them to current format
@@ -32,7 +33,7 @@ for (i in seq_along(protocoles_query)){
   imported_file$observation_id <- seq_along(imported_file$session_id)
   
   # add geometry
-  if (protocoles_query[i] == "sauvages"){
+  if (data_queries[i] == "sauvages"){
     coordinates = c("longitude_debut", "latitude_debut")
   } else {
     coordinates = c("longitude", "latitude")
@@ -47,15 +48,15 @@ for (i in seq_along(protocoles_query)){
   cat("       ok\n")
   
   # add information on the abondance index
-  imported_file_geometry$taxon_count_description <- hutils::Switch(protocoles_query[i], DEFAULT = "abondance", 
+  imported_file_geometry$taxon_count_description <- hutils::Switch(data_queries[i], DEFAULT = "abondance", 
                  "alamer" = "classe_abondance",
                  "spipoll_VNE" = "classe_abondance",
                  "lichens" = "classe_abondance",
                  "sauvages" = "presence")
   
   # save file
-  dir.create("data")
-  file_to_save_name <- paste0("data/export_vne_", protocoles_query[i], ".csv")
+  dir.create("data", showWarnings = FALSE)
+  file_to_save_name <- paste0("data/export_vne_", data_queries[i], ".csv")
   data.table::fwrite(imported_file_geometry, file = file_to_save_name)
   # send the file
   upload_file_to_ftp(file_to_save_name, "", "Vigie-Nature/")
