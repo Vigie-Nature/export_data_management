@@ -7,13 +7,13 @@ source("R/functions_ftp.R")
 
 # list of the protocols to upload
 data_queries <- c("alamer",
-                      # "escargots",
-                      # "oiseaux",
-                      # "sauvages",
-                      # "vdt",
-                      # "spipoll_VNE",
-                      # "biolit",
-                      # "lichens",
+                      "escargots",
+                      "oiseaux",
+                      "sauvages",
+                      "vdt",
+                      "spipoll_VNE",
+                      "biolit",
+                      "lichens",
                       "participation_observations"
 )
 
@@ -55,7 +55,7 @@ for (i in seq_along(data_queries)){
                  "sauvages" = "presence")
   
   # save file
-  dir.create("data")
+  dir.create("data", showWarnings = FALSE)
   file_to_save_name <- paste0("data/export_vne_", data_queries[i], ".csv")
   data.table::fwrite(imported_file_geometry, file = file_to_save_name)
   # send the file

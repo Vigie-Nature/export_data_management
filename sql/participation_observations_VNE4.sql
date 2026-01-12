@@ -1,16 +1,16 @@
 select distinct 
 	TAB2.session_id,
 	TAB2.etablissement,
-	TAB2.zip_etab as code_postal_etab,
+	TAB2.zip_etab as session_zip_code,
 	TAB2.type_etablissement,
 	TAB2.Niveau_scolaire,
 	TAB2.effectifs,
-	TAB2.Date_observation,
+	TAB2.session_date,
 	TAB2.protocole,
 	(case when TAB2.Nombre_individus>0 then TAB2.Espece
-		  else null END) as Espece2,
+		  else null END) as taxon,
 	--TAB2.Espece as Espece,
-	TAB2.Nombre_individus as Nombre_individus,
+	TAB2.Nombre_individus as taxon_count,
 	TAB2.calcul_diversite,
 	(case when TAB2.photo='Photo de  : ' then NULL
 			  else TAB2.photo END) as Photo,
@@ -32,7 +32,7 @@ select distinct
 		TAB.type_etablissement,
 		TAB.niveau as Niveau_scolaire,
 		TAB.effectifs as effectifs,
-		TAB.Date_observation,
+		TAB.session_date,
 		TAB.protocole,
 		TAB.Espece as Espece,
 		SUM(TAB.Nombre_individus) as Nombre_individus,
@@ -65,7 +65,7 @@ select distinct
 			   dico_structures.zipcode as zip_etab,
 			   dico_structures.city as ville_etab,
 			   dico_academies."name" as academie,
-			   observations.date AS Date_observation,
+			   observations.date AS session_date,
 			   dico_protocoles.nom_courant as protocole,
 			   (CASE observations_abondances.nom_espece WHEN 'Anecique t?te noire (juvenile)' THEN 'Anecique t?te noire' 
 								   					   WHEN 'Anecique t?te rouge (juvenile)' THEN 'Anecique t?te rouge'
@@ -125,7 +125,7 @@ select distinct
 		TAB.structurepk,
 		TAB.niveau,
 		TAB.effectifs,
-		TAB.Date_observation,
+		TAB.session_date,
 		TAB.protocole,
 		TAB.Espece,
 		TAB.calcul_diversite,
