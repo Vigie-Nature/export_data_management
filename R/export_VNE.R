@@ -2,7 +2,7 @@
 
 # import functions ----
 source("R/functions_import_database_VN.R")
-source("R/functions_ftp.R")
+source("R/upload_file_to_server.R")
 
 
 # list of the protocols to upload
@@ -59,7 +59,7 @@ for (i in seq_along(data_queries)){
   file_to_save_name <- paste0("data/export_vne_", data_queries[i], ".csv")
   data.table::fwrite(imported_file_geometry, file = file_to_save_name)
   # send the file
-  upload_file_to_ftp(file_to_save_name, "", "Vigie-Nature/")
+  upload_file_to_server(file_to_save_name, "", "Vigie-Nature/")
   # remove file after upload
   file.remove(file_to_save_name)
 }
