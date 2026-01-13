@@ -2,9 +2,6 @@
 # Functions to upload and download files from Vigie-Nature FTP
 #######
 
-# import environment variables
-readRenviron(".env")
-
 #' Upload a file to ftp server
 #'
 #' @param file_to_upload file to upload
@@ -14,7 +11,7 @@ readRenviron(".env")
 #' @return
 #'
 #' @examples
-upload_file_to_ftp <- function (file_to_upload, file_folder_local = "", file_folder_destination = ""){
+upload_file_to_server <- function (file_to_upload, file_folder_local = "", file_folder_destination = ""){
   
   # get permissions
   user = Sys.getenv("FTP_USER")

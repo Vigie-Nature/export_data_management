@@ -1,0 +1,33 @@
+Title: export_data_management
+Authors@R: c(
+    person(
+      given = "Charles", 
+      family = "Thévenin", 
+      role = "aut",
+      email = "charles.thevenin@mnhn.fr"),
+      person(
+      given = "Simon", 
+      family = "Benateau", 
+      role = "aut",
+      email = "simon.benateau@mnhn.fr"),
+      person(
+      given = "Mael", 
+      family = "Pretet", 
+      role = "aut",
+      email = "mael.pretet1@mnhn.fr")
+Description: Centralisation des scripts d'exports et de standardisation pour l'ensemble des projets Vigie-Nature. Les fonctions permettent d'extraire les données et de les envoyer sur le serveur FTP.
+License: GPL (>= 2)
+URL: https://github.com/Vigie-Nature/export_data_management
+Encoding: UTF-8
+Depends:
+    dplyr,
+    ggplot2
+Imports:
+    data.table,
+    DBI,
+    here,
+    hutils,
+    readr,
+    RPostgres,
+    sf,
+    utils
