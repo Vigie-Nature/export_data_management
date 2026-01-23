@@ -6,54 +6,62 @@ source("R/upload_file_to_server.R")
 
 
 # list of the protocols to upload
-data_queries <- c("alamer",
-                      "escargots",
-                      "oiseaux",
-                      "sauvages",
-                      "vdt",
-                      "spipoll_VNE",
-                      "biolit",
-                      "lichens",
-                      "participation_observations"
+data_queries <- c(
+  "alamer",
+  "escargots",
+  "oiseaux",
+  "sauvages",
+  "vdt",
+  "spipoll_VNE",
+  "biolit",
+  "lichens",
+  "participation_observations"
 )
 
 # import and process file loop ----
-for (i in seq_along(data_queries)){
+for (i in seq_along(data_queries)) {
   cat(paste("Importation des données", data_queries[i]))
-  
+
   # import file from database ----
   query <- read_sql_query(paste0("sql/", data_queries[i], "_VNE4.sql"))
   imported_file <- import_from_vne(query)
   cat("       ok\n")
-  
+
   # add missing columns or transform them to current format
   cat("add missing columns or transform")
-  
+
   # add observation_id
   imported_file$observation_id <- seq_along(imported_file$session_id)
-  
+
   # add geometry
-  if (data_queries[i] == "sauvages"){
+  if (data_queries[i] == "sauvages") {
     coordinates = c("longitude_debut", "latitude_debut")
   } else {
     coordinates = c("longitude", "latitude")
   }
-  
-  imported_file_geometry = sf::st_as_sf(imported_file, coords = coordinates, 
-                                        crs = 4326, agr = "constant")
+
+  imported_file_geometry = sf::st_as_sf(
+    imported_file,
+    coords = coordinates,
+    crs = 4326,
+    agr = "constant"
+  )
   # add cd_nom / cd ref
   imported_file_geometry$cd_nom <- imported_file_geometry$cd_ref <- NA
   # add validation
   imported_file_geometry$validation = NA
   cat("       ok\n")
-  
+
   # add information on the abondance index
-  imported_file_geometry$taxon_count_description <- hutils::Switch(data_queries[i], DEFAULT = "abondance", 
-                 "alamer" = "classe_abondance",
-                 "spipoll_VNE" = "classe_abondance",
-                 "lichens" = "classe_abondance",
-                 "sauvages" = "presence")
-  
+  imported_file_geometry$taxon_count_description <- hutils::Switch(
+    data_queries[i],
+    DEFAULT = "abondance",
+    "alamer" = "classe_abondance",
+    "spipoll_VNE" = "classe_abondance",
+    "lichens" = "classe_abondance",
+    "sauvages" = "presence"
+  )
+
   # save file
   dir.create("data", showWarnings = FALSE)
   file_to_save_name <- paste0("data/export_vne_", data_queries[i], ".csv")
