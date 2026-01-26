@@ -12,4 +12,7 @@ source(here::here("R", "function_encoding_utf8.R"))
 source(here::here("R", "export_spipoll.R"))
 
 export_spipoll()
-export_spipoll_social_events()       
+export_spipoll_social_events()
+
+export_qubs()
+export_qubs_social_events()
