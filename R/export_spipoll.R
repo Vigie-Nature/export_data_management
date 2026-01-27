@@ -5,7 +5,7 @@
 #'
 #' @param x a `numeric` vector
 #'
-#' @return Un `data.frame` avec l'ensemble des donnees du Spipoll tel que configuré dans l'export a plat standard
+#' @return Assigne un `data.frame` dans l'environnement global avec l'ensemble des donnees du Spipoll tel que configuré dans l'export a plat standard
 #' Chaque ligne du tableau représente soit une collection (session) vide sans pollinisateur, soit une observation avec photo
 #'
 #' @export
@@ -23,12 +23,9 @@ dt_spipoll <- import_from_mosaic(query,
                                  database_name = "spgp",
                                  force_UTF8 = TRUE)
 
-# import des donnees
-dt_spipoll <- import_from_mosaic(query, 
-                                 database_name = "spgp",
-                                 force_UTF8 = TRUE) %>%
+dt_spipoll <- dt_spipoll %>%
   #conserver uniquement les données depuis 2010
-  filter(year(session_date) > 2009) %>%
+  filter(lubridate::year(session_date) > 2009) %>%
   #ajout de colonnes
   mutate(#annee de la session
     annee = lubridate::year(session_date),
