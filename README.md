@@ -6,7 +6,7 @@ Les étapes de l'envoi d'un export standardisé des données d'un observatoire s
 
 1.  **Importer** les données sous un dataframe dans l'environnement global, les filtrer et les standardiser
 2.  **Tester** si l'export de données est conforme au standard défini dans les règles de contribution avec la fonction `check_data`
-3.  **Uploader** l'export de données vers le serveur avec la fonction `upload_to_serve`
+3.  **Uploader** l'export de données vers le serveur avec la fonction `upload_file_to_server`
 
 ## Requirements
 
@@ -14,7 +14,7 @@ Chaque export de données s'effectue grâce à une fonction dédiée
 
 Le script correspondant doit permettre d'effectuer les tâches suivantes :
 
--   **Importer le jeu de données** comme dataframe dans l'environnement gobal R
+-   **Importer les données brutes** comme dataframe dans l'environnement gobal R
 
 -   **Standardiser les noms des champs** là où nécessaire afin d'homogénéiser les exports (session, observation, user, etc...) et appliquer les formatages nécessaires (ex : format de dates en `YYYY-MM-DD`)
 
@@ -24,25 +24,28 @@ Le script correspondant doit permettre d'effectuer les tâches suivantes :
 
 ### Importer les données brutes
 
-Import depuis un fichier .csv contenant un export de données "brutes" stocké dans le sous-répertoire `/data/input`.
+Deux possibilités selon les modalités d'accès aux données :
 
-Import des données via l'envoi d'une requête SQL (`/sql`) dans le cas de Vigie-Nature école ou des bases de données hébergées chez Mosaic
+- Import depuis un fichier .csv contenant un export de données "brutes" stocké dans le sous-répertoire `/data/input`.
+
+- Import des données via l'envoi d'une requête SQL dans le cas de Vigie-Nature école ou des bases de données hébergées chez Mosaic. Les requêtes sont placées dans le sous-répertoire `/sql`
 
 ### Standardisation des exports
 
-Homogénéisation des termes utilisés :
+Harmonisation des termes utilisés :
 
--   `session` correspond à la participation, c'est-à-dire l'application du protocole par une personne à un moment donné (une collection spipoll, un relevé Vigie-Flore, une partie Birdlab...). Une `session` d'observation doit systématiquement être associée à un identifiant unique (`session_id`) et à une date `session_date`, et parfois à une heure de début et de fin (`session_starting_time`)
+-   `session` correspond à la participation, c'est-à-dire l'application du protocole par une personne à un moment donné (une collection Spipoll, un relevé Vigie-Flore, une partie Birdlab...). Une `session` d'observation doit systématiquement être associée à un identifiant unique (`session_id`) et à une date (`session_date`), et parfois à une heure de début et de fin (`session_starting_time`)
 
 -   `observation` correspond à l'observation d'un taxon, et est associé à un identifiant unique (`observation_id`). Une session peut comporter une ou plusieurs observations. Les exports à plat peuvent contenir des sessions "vides" : aucun organisme n'a été observé et le champ `observation_id` sera vide. 
 
 -   `site` permet d'identifier le lieu où a été effectuée la session d'observation. Le site doit être associé à des coordonnées géographiques en WGS 84.
 
-- `latitude` & `longitude` : les protocoles ne se basent pas sur la même unité spatiale d'échantillonnage (transect, point d'observation, quadrat...). Afin de faciliter la synthèse des données l'export à plat doit associer un couple de coordonnées XY à chaque session (barycentre de la ligne ou du polygone).
+- `latitude` & `longitude` : afin de faciliter la synthèse des données l'export à plat doit associer un couple de coordonnées XY à chaque session. Dans la plupart des cas il s'agît simplement des coordonnées du point d'observation. Néanmoins certains protocoles se basent sur d'autres unités spatiales d'échantillonnage (transect, point d'observation, quadrat...), et dans ce cas là les valeurs correspondront au barycentre de la ligne ou du polygone.
 
 -   `taxon` fournit l'information sur l'organisme ou le groupe d'organisme observé. Le `taxon` peut-être associé à une valeur de comptage (`taxon_count`) qui peut être une abondance ou un nombre de contacts. Si la valeur décrite dans `taxon_count` n'est pas un nombre d'individus alors le type doit être spécifié dans un champ `taxon_count_description`. Les exports à plat peuvent contenir des sessions "vides" : aucun organisme n'a été observé et le champ `taxon` sera vide.
 
-> [!CAUTION] CHAQUE EXPORT DE DONNEES DOIT COMPRENDRE L'ENSEMBLE DES CHAMPS CI-DESSOUS
+> [!IMPORTANT]
+> CHAQUE EXPORT DE DONNEES DOIT COMPRENDRE L'ENSEMBLE DES CHAMPS CI-DESSOUS
 
 Liste des noms des champs obligatoires
 
@@ -53,14 +56,17 @@ Liste des noms des champs obligatoires
 | observation_id | Identifiant unique de l'observation | Peut être NA si aucun organisme n'a été observée lors de la session |
 | user_id | Identifiant unique de la personne ayant effectué l'observation | Ne peut être NA |
 | taxon | Nom de l'espèce, du groupe d'espèce ou du type d'organisme observé | Peut être NA si aucun organisme n'a été observé lors de la session |
-| longitude | Longitude du site d'observation (la valeur exacte pour un point d'observation, le centroïde pour un transect ou un polygone) | Ne peut être NA |
-| latitude | Latitude du site d'observation (la valeur exacte pour un point d'observation, le centroïde pour un transect ou un polygone) | Ne peut être NA |
+| longitude | Longitude du site d'observation (la valeur exacte pour un point d'observation, le barycentre pour un transect ou un polygone) | Ne peut être NA |
+| latitude | Latitude du site d'observation (la valeur exacte pour un point d'observation, le barycentre pour un transect ou un polygone) | Ne peut être NA |
 
 Formatage
 
 -   `session_date` au format `YYYY-MM-DD`
 
 -   si absente du jeu de données, ajouter la colonne `session_year` correspondant à l'année de la session
+
+- `latitude` &  `longitude` en projection WGS84
+
 
 ### Corrections
 
@@ -99,7 +105,7 @@ BDD_VNE_USER=bdd_vne_user
 BDD_VNE_MDP=bdd_vne_mdp
 ```
 
-## Data available
+## Exports de données disponibles
 
 ### Vigie-Nature École data
 
@@ -112,3 +118,17 @@ BDD_VNE_MDP=bdd_vne_mdp
 -   Spipoll
 -   Placettes à vers de terre
 -   Participation data (all observations together in a single .csv, without the protocol specific data)
+
+### Bases de données Mosaic
+
+- ALAMER : `export_alamer.csv` (export à plat participations/observations)
+- Spipoll : `export_spipoll.csv` (export à plat participations/observations) & `spipoll_comments.csv` (validations, suggestions, ré-identifications, commentaires...)
+- QUBS : `export_qubs_aspifaune.csv`/`export_qubs_noctambules.csv`/`export_qubs_escargots.csv`/`export_qubs_vers.csv` (export à plat participations/observations) & `qubs_comments.csv` (validations, suggestions, ré-identifications, commentaires...)
+- Florilèges et Propage : `export_florileges.csv`/`export_propage.csv` (export à plat participations/observations du Propage)
+- OAB : à faire
+- Opération papillons : à faire
+- Observatoire des bourdons : à faire
+
+
+
+
