@@ -16,7 +16,7 @@
 library(dplyr)
 
 export_spj <- function(){
-  # requete export a plat Spipoll
+  # requete export a plat spj
   query <- read_sql_query(here::here("sql", "spj_export_a_plat_standard.sql"))
   # import des donnees
   dt_spj <- import_from_mosaic(query, 
@@ -27,7 +27,7 @@ export_spj <- function(){
   dt_spj <- dt_spj %>%
     filter(filter(!is.na(dept_code),         # suppression des départements nuls
            str_length(dept_code)==2,  # suppression des drom-com
-           session_year >= 2019) %>%
+           session_year >= 2019)) %>%
     # On passe la date en format YYYY-MM-DD
     mutate(session_date = as.Date(session_date, "%Y-%m-%d"))
     
