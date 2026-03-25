@@ -25,9 +25,9 @@ export_obj <- function(){
   
   # Modification du data frame 
   dt_obj <- dt_obj %>%
-    filter(filter(!is.na(dept_code),         # suppression des départements nuls
-                  str_length(dept_code)==2,  # suppression des drom-com
-                  session_year >= 2019)) %>%
+   filter(!is.na(dept_code),       # suppression des départements nuls
+          stringr::str_length(dept_code)==2,  # suppression des drom-com
+          session_year >= 2019) %>%
     # On passe la date en format YYYY-MM-DD
     mutate(session_date = as.Date(session_date, "%Y-%m-%d"))
     

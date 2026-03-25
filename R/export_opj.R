@@ -15,21 +15,21 @@
 
 library(dplyr)
 
-export_spj <- function(){
+export_opj <- function(){
   # requete export a plat spj
-  query <- read_sql_query(here::here("sql", "spj_export_a_plat_standard.sql"))
+  query <- read_sql_query(here::here("sql", "opj_export_a_plat_standard.sql"))
   # import des donnees
-  dt_spj <- import_from_mosaic(query, 
+  dt_opj <- import_from_mosaic(query, 
                                database_name = "spgp",
                                force_UTF8 = TRUE)
   
   # Modification du data frame
-  dt_spj <- dt_spj %>%
-    filter(filter(!is.na(dept_code),         # suppression des départements nuls
-           str_length(dept_code)==2,  # suppression des drom-com
-           session_year >= 2019)) %>%
+  dt_opj <- dt_opj %>%
+    filter(!is.na(dept_code),         # suppression des départements nuls
+           stringr::str_length(dept_code)==2,  # suppression des drom-com
+           session_year >= 2019) %>%
     # On passe la date en format YYYY-MM-DD
     mutate(session_date = as.Date(session_date, "%Y-%m-%d"))
     
-  return(dt_spj)
+  return(dt_opj)
 }
