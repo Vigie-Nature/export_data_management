@@ -30,7 +30,8 @@ SELECT
 	t17.value as frequence_Herbicide,
 	t18.value as frequence_Fongicide,
 	t19.value as frequence_AntiLimace,
-	t20.value as frequence_BouillieBordelaise
+	t20.value as frequence_BouillieBordelaise,
+	t21.value as site_type
 FROM
 	spgp.pj_observation po
 LEFT JOIN spgp.pj_participation pp on
@@ -81,3 +82,4 @@ LEFT JOIN thesaurus t19 on
 	soay.frequenceAntiLimaceId = t19.id
 LEFT JOIN thesaurus t20 on
 	soay.frequenceBouillieBordelaiseId = t20.id
+LEFT JOIN spgp.thesaurus t21 on soay.typeId = t21.id
