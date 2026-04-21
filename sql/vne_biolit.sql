@@ -60,15 +60,15 @@ SELECT
    --replace(replace(observations.notes,chr(10),' '),chr(13),' ') AS Notes
 
 FROM observations
-	LEFT JOIN observations_abondances on observations_abondances.observationfk = observations.observationpk
-	left join observations_details_biolit on observations_details_biolit.observationfk = observations.observationpk
-	LEFT JOIN observateurs ON observateurs.observateurpk = observations.observateurfk
-	LEFT JOIN groupes ON groupes.groupepk = observateurs.groupefk
-	LEFT JOIN users ON users.userpk = groupes.userfk
-	left join zones_changes on zones_changes.zonechangepk = observations.zonechangefk
-	left join zones on zones.zonepk = zones_changes.zonefk
-	left join dico_structures on dico_structures.structurepk = groupes.structurefk
-	left join dico_academies on dico_academies.academiepk = dico_structures.academiefk
+ LEFT JOIN observations_abondances on observations_abondances.observationfk = observations.observationpk
+ left join observations_details_biolit on observations_details_biolit.observationfk = observations.observationpk
+ LEFT JOIN observateurs ON observateurs.observateurpk = observations.observateurfk
+ LEFT JOIN groupes ON groupes.groupepk = observateurs.groupefk
+ LEFT JOIN users ON users.userpk = groupes.userfk
+ left join zones_changes on zones_changes.zonechangepk = observations.zonechangefk
+ left join zones on zones.zonepk = zones_changes.zonefk
+ left join dico_structures on dico_structures.structurepk = groupes.structurefk
+ left join dico_academies on dico_academies.academiepk = dico_structures.academiefk
 
 WHERE
 observations.protocolefk = 6
