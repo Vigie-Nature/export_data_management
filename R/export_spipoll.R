@@ -66,7 +66,7 @@ dt_spipoll <- dt_spipoll %>%
                               #intervals are open on the right
                               right = FALSE)))
 
-assign("dt_spipoll", dt_spipoll, envir = .GlobalEnv)
+return(dt_spipoll)
 
 }
 
@@ -97,6 +97,6 @@ social_spipoll$typeId[which(social_spipoll$typeId == 4)] <- "Commentaire"
 social_spipoll$typeId[which(social_spipoll$typeId == 8)] <- "Notification"
 social_spipoll$typeId[which(social_spipoll$typeId == 9)] <- "Ajout dénomination plus précise"
 
-assign("social_spipoll", social_spipoll, envir = .GlobalEnv)
+return(export_spipoll_social_events())
 
 }

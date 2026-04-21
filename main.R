@@ -23,3 +23,9 @@ source(here::here("R", "export_qubs.R"))
 export_qubs()
 # donnees d'interactions entre participants
 export_qubs_social_events()
+
+
+# Extraction donnees Qubs
+source(here::here("R", "export_alamer.R"))
+# donnees de participation
+export_alamer()

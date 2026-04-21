@@ -23,7 +23,7 @@ for (i in seq_along(data_queries)) {
   cat(paste("Importation des données", data_queries[i]))
 
   # import file from database ----
-  query <- read_sql_query(paste0("sql/", data_queries[i], "_VNE4.sql"))
+  query <- read_sql_query(paste0("sql/vne_", data_queries[i], ".sql"))
   imported_file <- import_from_vne(query)
   cat("       ok\n")
 
