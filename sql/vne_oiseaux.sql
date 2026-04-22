@@ -1,4 +1,5 @@
 SELECT
+   users.userpk AS user_id,
    observations.observationpk AS session_id,
    zones.zonepk AS site_id,
    groupes.structurefk AS structure_id,

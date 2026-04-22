@@ -13,6 +13,12 @@
 read_sql_query <- function(filepath, encoding = "latin1"){
   con = file(filepath, "r", encoding = encoding)
   lines <- readLines(con, encoding = encoding)
+    for (i in seq_along(lines)){
+    lines[i] <- gsub("\\t", " ", lines[i])
+    if(grepl("--",lines[i]) == TRUE){
+      lines[i] <- paste(sub("--","/*",lines[i]),"*/")
+    }
+  }
   sql.string <- paste(lines, collapse = " ")
   close(con)
   return(sql.string)

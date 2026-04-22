@@ -1,4 +1,5 @@
 SELECT
+  users.userpk AS user_id,
   observations.observationpk AS session_id,
   observations.date AS session_date,
   groupes.anneescol AS Annee_scolaire,
@@ -17,7 +18,7 @@ SELECT
   dico_species.speciepk,
 
   
-  -- Informations issues de la saisie des donn?es
+  -- Informations issues de la saisie des donnees
   observations_details_plagesvivantes.heure_debut as session_starting_time,
   observations_details_plagesvivantes.epaisseur_laisse,
   observations_details_plagesvivantes.largeur_laisse,
@@ -46,12 +47,7 @@ left join zones_description_plagesvivantes on zones_description_plagesvivantes.z
 left join dico_structures on dico_structures.structurepk = groupes.structurefk 
 left join dico_academies on dico_academies.academiepk = dico_structures.academiefk 
 left join dico_species on dico_species.speciepk = observations_abondances.speciefk 
-
 WHERE 
 observations.protocolefk = 12
--- and groupes.anneescol = '2022'
---and dico_academies.name in ('LILLE', 'AMIENS')
 and users.email not in('vne5@yopmail.com')
---AND dico_etablissements.zipcode LIKE '93%'
-and observations_abondances.abondance > 0
-
+and observations_abondances.abondance > 0;

@@ -1,4 +1,5 @@
 SELECT DISTINCT
+   users.userpk AS user_id,
    dico_structures.structurepk AS structurepk,
    zones.zonepk AS site_id,
    groupes.structurefk AS structure_id,
