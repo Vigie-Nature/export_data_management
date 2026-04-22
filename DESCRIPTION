@@ -30,4 +30,5 @@ Imports:
     readr,
     RPostgres,
     sf,
-    utils
+    utils,
+    lubridate
