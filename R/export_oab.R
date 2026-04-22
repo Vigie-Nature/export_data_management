@@ -70,7 +70,9 @@ export_qubs <- function(){
     # Et on fusionne les deux
     dt <-
       rbind(sessions_vides, observations) |>
+      mutate(session_date = session_date |> lubridate::as_date() |> format(format = "%Y-%m-%d"))
       arrange(session_id)
+
 
     assign(
       stringr::str_glue("dt_{proto}"),
