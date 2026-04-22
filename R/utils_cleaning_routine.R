@@ -16,16 +16,7 @@ format_site <- function(df){
   cat(n_distinct(sites_non_valides), "sites where filtered out of the data frame\n")
   
   df <- df %>% filter(grepl("^\\d{6}$", site))
-  
-  # # Pas utile car spécifique au STOC par points et pas aux autres observatoires.
-  # sites_non_valides <- df %>% 
-  #   filter(!str_sub(point, -2) %in% sprintf("%02d", 1:10)) %>% select(site)
-  # cat(n_distinct(sites_non_valides), "sites where filtered out of the data frame
-  #     because of incorrect site names (expect values between 1 and 10)\n")
-  # #Remove all sites 
-  # df <- df %>% 
-  #   filter(str_sub(point, -2) %in% sprintf("%02d", 1:10)) %>%
-  #   mutate(point = as.integer(str_sub(point, -2)))
+
   return(df)
 }
 
@@ -136,8 +127,17 @@ create_code_habitat <- function(df){
   return(df)
 }
 
-
-rename_for_stoc <- function(df){
+#' rename_for_routine
+#' 
+#' A function to rename column in format mandatory for the routine of population
+#' trend developed in Vigie-Nature
+#' 
+#' @param df a `data.frame` containing the main dataframe
+#' 
+#' @return
+#' A `data.frame`. The same dataframe with a new column about habitat
+#'
+rename_for_routine <- function(df){
   df <- df %>% 
     mutate(year = lubridate::year(data$session_date))%>%
     rename(
@@ -145,5 +145,19 @@ rename_for_stoc <- function(df){
       point = point_id,
       species = taxon_id
     )
+  return(df)
+}
+
+clean_site_for_stoc <- function(df){
+  # Pas utile car spécifique au STOC par points et pas aux autres observatoires.
+  sites_non_valides <- df %>%
+    filter(!str_sub(point, -2) %in% sprintf("%02d", 1:10)) %>% select(site)
+  cat(n_distinct(sites_non_valides), "sites where filtered out of the data frame
+      because of incorrect site names (expect values between 1 and 10)\n")
+  #Remove all sites
+  df <- df %>%
+    filter(str_sub(point, -2) %in% sprintf("%02d", 1:10)) %>%
+    mutate(point = as.integer(str_sub(point, -2)))
+  
   return(df)
 }
