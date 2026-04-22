@@ -73,8 +73,8 @@ download_from_ftp <- function(nom_fichier) {
       paste0(Sys.getenv('REPO_HTTP_HOST'), nom_fichier)
     ) |>
     httr2::req_auth_basic(
-      Sys.getenv('REPO_FTP_USER'),
-      password = Sys.getenv('REPO_FTP_PASSWORD')
+      Sys.getenv('REPO_HTTP_USER'),
+      password = Sys.getenv('REPO_HTTP_PASSWORD')
     ) |>
     httr2::req_perform() |>
     httr2::resp_body_raw()

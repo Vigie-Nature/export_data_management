@@ -8,7 +8,7 @@
 #'
 #' @return Un `data.frame` pour chacun des protocoles de l'OAB nommés `dt_oab_nichoirs`, `dt_oab_transects`, `dt_oab_planches` et `dt_oab_placettes`.
 #'
-export_oab <- function(){
+export_oab <- function() {
   # Liste des protocoles de l'OAB à exporter
   # Le protocole chiro est sur une autre base, à faire plus tard
   protocoles <- c(

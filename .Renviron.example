@@ -9,6 +9,10 @@
 #REPO_FTP_PASSWORD=repo_ftp_password
 # Adresse du FTP
 #REPO_FTP_HOST=repo_ftp_host
+# Nom d'utilisateur pour l'accès HTTPS
+#REPO_HTTP_USER=repo_http_user
+# Mot de passe pour l'accès HTTPS
+#REPO_HTTP_PASSWORD=repo_http_password
 # URL pour accéder au FTP en HTTPS
 #REPO_HTTP_HOST=repo_http_host
 
