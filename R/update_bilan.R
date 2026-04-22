@@ -1,3 +1,18 @@
+#######
+# Functions to update the csv with the metadata
+#######
+
+#' Create a new row of metadata from an export
+#'
+#' @param export the flat export of an observatory (must complete the checks)
+#' @param export_name the name of the flat export
+#'
+#' @return a data frame which is a row containing the metadatas of export
+#'
+#' @examples
+#' 
+#' new_bilan_row(export_steli,"export_steli")
+#' 
 new_bilan_row <- function(export,export_name){
   nb_lignes <- nrow(export)
   nb_cols <- ncol(export)
@@ -19,6 +34,22 @@ new_bilan_row <- function(export,export_name){
   return(df)
 }
 
+#' Update or add a row of the metadata of an export in the metadata csv
+#'
+#' @description
+#' La fonction permet de mettre à jour les données d'un export dans le csv de metadonnées.
+#' Si il n'existe pas déjà, le csv de metadonnées est créé.
+#' 
+#' @param file the path of the metadata csv to update or create
+#' @param export the flat export of an observatory (must complete the checks)
+#' @param export_name the name of the flat export
+#'
+#' @return 
+#'
+#' @examples
+#' 
+#' update_bilan("bilan.csv",export_steli,"export_steli")
+#' 
 update_bilan <- function(file,export,export_name){
   if (file.exists(file)){
     table <- read.csv(file)
