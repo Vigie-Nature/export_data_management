@@ -1,20 +1,14 @@
 #' Export a plat des donnees de l'OAB
 #'
+#' Les données exportés sont au format décrit dans la [documentation](https://vigie-nature.github.io/data_catalogue_vn/chapters/data-oab.html)
+#' Chaque ligne du tableau représente soit une collection (session) vide sans organisme observé, soit une observation
+#'
 #' @description
 #' La fonction permet d'extraire les données de l'OAB via une requete SQL
 #'
-#' @param x a `numeric` vector
+#' @return Un `data.frame` pour chacun des protocoles de l'OAB nommés `dt_oab_nichoirs`, `dt_oab_transects`, `dt_oab_planches` et `dt_oab_placettes`.
 #'
-#' @return Un `data.frame` pour chacun des protocoles de l'OAB, tels que configurés pour les exports a plat standards
-#' Chaque ligne du tableau représente soit une collection (session) vide sans organisme observé, soit une observation
-#'
-#' @export
-#'
-#' @examples
-#'
-
-export_qubs <- function(){
-
+export_oab <- function(){
   # Liste des protocoles de l'OAB à exporter
   # Le protocole chiro est sur une autre base, à faire plus tard
   protocoles <- c(
@@ -50,7 +44,7 @@ export_qubs <- function(){
       dt |>
       summarise(
         .by = session_id,
-        # Toutes les colonnes sauf taxon et abondance contiennent normalement
+        # Toutes les colonnes sauf taxon et taxon_count contiennent normalement
         # la même valeur (puisqu'on a fait un pivot_longer sans prendre ces
         # colonnes), donc on récupère cette valeur
         across(!c(taxon_count, taxon), first),
@@ -73,9 +67,8 @@ export_qubs <- function(){
       mutate(session_date = session_date |> lubridate::as_date() |> format(format = "%Y-%m-%d"))
       arrange(session_id)
 
-
     assign(
-      stringr::str_glue("dt_{proto}"),
+      stringr::str_glue("dt_oab_{proto}"),
       dt_noctambules,
       envir = .GlobalEnv
     )
@@ -88,5 +81,4 @@ export_qubs <- function(){
       file_folder_destination = "Vigie-Nature/"
     )
   }
-
 }
