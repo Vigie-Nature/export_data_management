@@ -1,10 +1,10 @@
 #' Fonction pour lister les fichiers du FTP
 #'
-#' @param chemin 
-#' 
+#' @param chemin
+#'
 #' @description
 #' récupère la liste des fichiers se trouvant sur le FTP pour facilement faire des boucles de traitement qui balayent l'ensemble des données dispos
-#' 
+#'
 #'
 #' @return a character vector containing all csv export files present in the ftp
 #'
@@ -14,74 +14,75 @@
 #' library(rvest)
 #' library(xml2)
 #' list_ftp_files()
-#' 
+#'
 list_ftp_files <- function(chemin = "") {
-  url <- paste0(Sys.getenv('SITE_NAME'), chemin)
-  
-  reponse <- httr2::request(url) |> 
-    httr2::req_auth_basic(Sys.getenv('HTTPS_USER'), 
-                          password = Sys.getenv('HTTPS_PASSWORD')) |>
+  reponse <-
+    httr2::request(
+      paste0(Sys.getenv('REPO_HTTP_HOST'), chemin)
+    ) |>
+    httr2::req_auth_basic(
+      Sys.getenv('REPO_FTP_USER'),
+      password = Sys.getenv('REPO_FTP_PASSWORD')
+    ) |>
     httr2::req_perform()
-  
+
   # Parser le contenu HTML de la liste de répertoire
   contenu <- httr2::resp_body_html(reponse)
-  
+
   # Extraire les liens (noms de fichiers)
-  fichiers <- contenu |> 
-    rvest::html_nodes("a") |> 
+  fichiers <- contenu |>
+    rvest::html_nodes("a") |>
     rvest::html_attr("href")
-  
+
   # Filtrer pour enlever les éléments de navigation (., .., etc.)
   fichiers <- fichiers[!fichiers %in% c(".", "..", "../")]
-  #ne garder que les fichiers csv commençant par export_
 
-  fichiers <- subset(fichiers,grepl("export_",fichiers)) 
-  fichiers <- subset(fichiers,grepl(".csv",fichiers)) 
+  # Ne garder que les fichiers csv commençant par export_
+  fichiers <- subset(fichiers, grepl("export_",fichiers))
+  fichiers <- subset(fichiers, grepl(".csv",fichiers))
 
-  
   return(fichiers)
 }
 
 
 
-
-
-
-
-
 #' Telecharger les exports standardises VN/VNE
-#' 
+#'
 #' @description
 #' La fonction permet de télécharger les données des exports standardisés VN et VNE
 #' disponibles sur le serveur FTP. his function prints a simple message. This is a demo function to show good
 #' practices in writing and documenting R function. If you delete this function
-#' do not forget to delete the corresponding test file 
+#' do not forget to delete the corresponding test file
 #' `tests/testthat/test-demo.R` if you used `new_package(test = TRUE)`.
-#' 
+#'
 #' @param nom_fichier a string of characters.
 #'
 #' @return Un dataframe qui contient les donnees de l'export à plat.
-#' 
+#'
 #' @export
 #'
 #' @examples
 #' library(httr2)
 #' library(readr)
 #' download_from_ftp("export_propage.csv")
-#' 
-#' 
-
+#'
+#'
 download_from_ftp <- function(nom_fichier) {
-  requete <- httr2::request(paste0(Sys.getenv('SITE_NAME'), nom_fichier)) |> 
-    httr2::req_auth_basic(Sys.getenv('HTTPS_USER'), 
-                   password = Sys.getenv('HTTPS_PASSWORD')) |>
-    httr2::req_perform() |> httr2::resp_body_raw()
-  
-  
-  
+  requete <-
+    httr2::request(
+      paste0(Sys.getenv('REPO_HTTP_HOST'), nom_fichier)
+    ) |>
+    httr2::req_auth_basic(
+      Sys.getenv('REPO_FTP_USER'),
+      password = Sys.getenv('REPO_FTP_PASSWORD')
+    ) |>
+    httr2::req_perform() |>
+    httr2::resp_body_raw()
+
   df_serveur <- readr::read_csv2(requete)
-  if(ncol(df_serveur)<=1){
+  if (ncol(df_serveur)<=1) {
     df_serveur <- readr::read_csv(requete)
   }
+
   return(df_serveur)
 }
