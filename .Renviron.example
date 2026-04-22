@@ -1,0 +1,35 @@
+# Exemple de fichier de configuration
+# Copier le fichier sous le nom .Renviron
+# puis décommenter et compléter les lignes nécessaires
+
+# Accès au FTP
+# Nom d'utilisateur
+#REPO_FTP_USER=repo_ftp_user
+# Mot de passe
+#REPO_FTP_PASSWORD=repo_ftp_password
+# Adresse du FTP
+#REPO_FTP_HOST=repo_ftp_host
+# URL pour accéder au FTP en HTTPS
+#REPO_HTTP_HOST=repo_http_host
+
+# Accès aux bases Vigie Nature École
+# Nom d'utilisateur
+#BDD_VNE_USER=bdd_vne_user
+# Mot de passe
+#BDD_VNE_PASSWORD=bdd_vne_password
+# Adresse du serveur
+#BDD_VNE_HOST=bdd_vne_host
+# Numéro de port
+#BDD_VNE_PORT=bdd_vne_port
+# Nom de la base de données à laquelle accéder
+#BDD_VNE_NAME=bdd_vne_name
+
+# Accès aux bases de données Mosaic
+# Nom d'utilisateur
+#BDD_MOSAIC_USER=bdd_mosaic_user
+# Mot de passe
+#BDD_MOSAIC_PASSWORD=bdd_mosaic_password
+# Ne pas toucher ce paramètre, adresse locale
+#BDD_MOSAIC_HOST=127.0.0.1
+# Numéro de port utilisé dans le tunnel SSH
+#BDD_MOSAIC_PORT=bdd_mosaic_local_port
