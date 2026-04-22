@@ -4,6 +4,7 @@ SELECT
   `participations`.`user_id` AS `user_id`,
   st_x(`parcelles`.`localisation`) AS `longitude`,
   st_y(`parcelles`.`localisation`) AS `latitude`,
+  -- Somme des abondances des trois placettes
   IFNULL(CAST(`p1`.`epiges_adultes` AS INT), 0) +
   IFNULL(CAST(`p2`.`epiges_adultes` AS INT), 0) +
   IFNULL(CAST(`p3`.`epiges_adultes` AS INT), 0)
