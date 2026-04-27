@@ -42,19 +42,35 @@ import_from_mosaic <- function(query, database_name, force_UTF8 = FALSE){
   db_port <- strtoi(Sys.getenv('BDD_MOSAIC_PORT'))
 
   # 3. Read data from db
-  mydb <-  dbConnect(MySQL(), user = db_user, password = db_password,
-                     dbname = database_name, host = db_host, port = db_port)
+  mydb <-  dbConnect(
+    MySQL(),
+    host = db_host,
+    port = db_port,
+    dbname = database_name,
+    user = db_user,
+    password = db_password
+  )
+  on.exit(dbDisconnect(mydb)) # Se déconnecter à la fin
 
   raw_query_result <- dbSendQuery(mydb, query)
-  query_result <-  fetch(raw_query_result, n = -1)
+  # Nettoyer la requête à la fin (_avant_ de fermer la connexion)
+  # Permet d'éviter un message d'information
+  on.exit(dbClearResult(raw_query_result), add = TRUE, after = FALSE)
+
+  query_result <- dbFetch(raw_query_result, n = -1)
 
   #4. Force UTF8 encoding if column is char
   if(force_UTF8) {
-    query_result <- query_result %>%
-      mutate_if(is.character,
-                function(x) {Encoding(x) <- "UTF-8"
-                return(x)
-                })}
-  on.exit(dbDisconnect(mydb))
-  return(query_result)
+    query_result <-
+      query_result |>
+      mutate_if(
+        is.character,
+        function(x) {
+          Encoding(x) <- "UTF-8"
+          return(x)
+        }
+      )
+    }
+
+  query_result
 }

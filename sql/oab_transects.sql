@@ -5,7 +5,7 @@ SELECT
   st_x(`parcelles`.`localisation`) AS `longitude`,
   st_y(`parcelles`.`localisation`) AS `latitude`,
   `t`.*
-FROM 
+FROM
   `participations`
   INNER JOIN `parcelles`
     ON `parcelles`.`id` = `participations`.`parcelle_id`,
@@ -42,3 +42,4 @@ FROM
 WHERE
   `participations`.`protocol_id` = 7
   AND `participations`.`deleted_at` IS NULL
+;
