@@ -3,19 +3,21 @@
 # import functions ----
 source("R/functions_import_database_VN.R")
 source("R/upload_file_to_server.R")
+source("R/update_bilan.R")
+library(dplyr)
 
 
 # list of the protocols to upload
 data_queries <- c(
   "alamer",
-  "escargots",
-  "oiseaux",
-  "sauvages",
-  "vdt",
-  "spipoll_VNE",
+ # "escargots",
+  #"oiseaux",
+  #"sauvages",
+  #"vdt",
+  "spipoll",
   "biolit",
   "lichens",
-  "participation_observations"
+ # "participation_observations"
 )
 
 # import and process file loop ----
@@ -68,6 +70,8 @@ for (i in seq_along(data_queries)) {
   data.table::fwrite(imported_file_geometry, file = file_to_save_name)
   # send the file
   upload_file_to_server(file_to_save_name, "", "Vigie-Nature/")
+  # make summary file
+  update_bilan(imported_file_geometry, sub('.*/', '', file_to_save_name))
   # remove file after upload
   file.remove(file_to_save_name)
 }

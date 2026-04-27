@@ -17,19 +17,19 @@ new_bilan_row <- function(export,export_name){
   nb_lignes <- nrow(export)
   nb_cols <- ncol(export)
   dates <- lubridate::ymd(export$session_date)
-  premier_obs <- min(dates,na.rm = TRUE)
-  dernier_obs <- max(dates,na.rm = TRUE)
+  date_premier_obs <- min(dates,na.rm = TRUE)
+  date_dernier_obs <- max(dates,na.rm = TRUE)
   nb_participants <- group_by(export,user_id) |> summarise() |> nrow()
   nb_sessions <- n_distinct(export$session_id)
-  derniere_maj <- Sys.Date()
+  derniere_maj <- Sys.time()
   df <- data.frame(export_name=export_name,
                    nb_lignes=nb_lignes,
                    nb_cols=nb_cols,
-                   premier_obs=as.character(premier_obs),
-                   dernier_obs=as.character(dernier_obs),
+                   date_premier_obs=date_premier_obs,
+                   date_dernier_obs=date_dernier_obs,
                    nb_participants=nb_participants,
                    nb_sessions=nb_sessions,
-                   derniere_maj=as.character(derniere_maj))
+                   date_derniere_maj=derniere_maj)
   
   return(df)
 }
@@ -40,7 +40,7 @@ new_bilan_row <- function(export,export_name){
 #' La fonction permet de mettre à jour les données d'un export dans le csv de metadonnées.
 #' Si il n'existe pas déjà, le csv de metadonnées est créé.
 #' 
-#' @param file the path of the metadata csv to update or create
+#' @param metadata_file the path of the metadata csv to update or create
 #' @param export the flat export of an observatory (must complete the checks)
 #' @param export_name the name of the flat export
 #'
@@ -48,23 +48,35 @@ new_bilan_row <- function(export,export_name){
 #'
 #' @examples
 #' 
-#' update_bilan("bilan.csv",export_steli,"export_steli")
+#' update_bilan(export_steli,"export_steli", "export_bilan.csv")
 #' 
-update_bilan <- function(file,export,export_name){
-  if (file.exists(file)){
-    table <- read.csv(file)
-  } else {
-    table <- NULL
-  }
-  new_row <- new_bilan_row(export,export_name)
+update_bilan <- function(export, export_name, metadata_file = "export_bilan.csv"){
+  browser()
+  # update all metadata
+  new_row <- new_bilan_row(export, export_name) %>%
+  mutate(across(starts_with("date"), ~ as.Date(.x, format = "%Y-%m-%d")))
   
-  # Add new_row to table
-  same_export <- table[,"export_name"]==new_row$export_name
-  if (sum(same_export)){
-    table[same_export]=new_row
+  # check that bilan already exist
+  if (any(list_ftp_files() == metadata_file)){
+    table <- download_from_ftp(metadata_file) %>%
+    mutate(across(starts_with("date"), ~ as.Date(.x, format = "%Y-%m-%d")))
+    same_export = table[,"export_name"] == new_row$export_name
+    # check if metadata already exist
+    # replace line
+    if (any(same_export)){
+      table[same_export, ] <- new_row
+    # add line
+    } else {
+      table <- bind_rows(table, new_row)
+    }
+
   } else {
-    table <- bind_rows(table,new_row)
+    table <- new_row
   }
   
-  write.csv(table,file, row.names = FALSE)
+  write.csv(table, paste0("data/",metadata_file), row.names = FALSE)
+
+  # send file to ftp
+  upload_file_to_server(paste0("data/",metadata_file), "", "Vigie-Nature/")
+
 }
