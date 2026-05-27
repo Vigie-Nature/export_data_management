@@ -4,7 +4,7 @@ devtools::load_all()
 library(dplyr)
 
 # import environment variables
-readRenviron(".env")
+readRenviron(".Renviron")
 
 #load functions to fetch data
 source(here::here("R", "function_import_from_mosaic.R"))

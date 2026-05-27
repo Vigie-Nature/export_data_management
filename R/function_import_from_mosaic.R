@@ -6,7 +6,7 @@
 #' @export
 #'
 #' @examples
-#' 
+#'
 read_sql_query <- function(filepath){
   con = file(filepath, "r")
   lines <- readLines(con)
@@ -25,7 +25,7 @@ read_sql_query <- function(filepath){
 
 #' Import data from mosaic database
 #'
-#' @param query A sql query as string 
+#' @param query A sql query as string
 #' @param database_name Database name as string
 #'
 #' @return Results from the query as dataframe
@@ -34,27 +34,27 @@ read_sql_query <- function(filepath){
 #' @examples
 import_from_mosaic <- function(query, database_name, force_UTF8 = FALSE){
   library(RMySQL)
-  
+
   # parameters
-  db_user <- Sys.getenv('DB_USER')
-  db_password <- Sys.getenv('DB_PASSWORD')
-  db_host <- Sys.getenv('DB_HOST')
-  db_port <- strtoi(Sys.getenv('DB_PORT'))
-  
+  db_user <- Sys.getenv('BDD_MOSAIC_USER')
+  db_password <- Sys.getenv('BDD_MOSAIC_PASSWORD')
+  db_host <- Sys.getenv('BDD_MOSAIC_HOST')
+  db_port <- strtoi(Sys.getenv('BDD_MOSAIC_PORT'))
+
   # 3. Read data from db
   mydb <-  dbConnect(MySQL(), user = db_user, password = db_password,
                      dbname = database_name, host = db_host, port = db_port)
-  
+
   raw_query_result <- dbSendQuery(mydb, query)
   query_result <-  fetch(raw_query_result, n = -1)
-  
+
   #4. Force UTF8 encoding if column is char
   if(force_UTF8) {
-    query_result <- query_result %>% 
-      mutate_if(is.character, 
+    query_result <- query_result %>%
+      mutate_if(is.character,
                 function(x) {Encoding(x) <- "UTF-8"
                 return(x)
-                })} 
+                })}
   on.exit(dbDisconnect(mydb))
   return(query_result)
 }
