@@ -16,8 +16,6 @@ SELECT
   cast(observations_abondances.quadrat as INT)+1 as Numero_quadrat,
   dico_species.speciepk,
 
-  
-  -- Informations issues de la saisie des donn?es
   observations_details_plagesvivantes.heure_debut as session_starting_time,
   observations_details_plagesvivantes.epaisseur_laisse,
   observations_details_plagesvivantes.largeur_laisse,
@@ -26,8 +24,7 @@ SELECT
   (CASE observations_details_plagesvivantes.trace_cribleuse WHEN TRUE THEN 'Oui' ELSE 'Non' END) as trace_cribleuse,
   (CASE observations_details_plagesvivantes.acces_engins WHEN TRUE THEN 'Oui' ELSE 'Non' END) as acces_engins,
   observations_details_plagesvivantes.activites as activites_observees,
-  
-  -- Informations issues de la description de la zone d'observation
+
   cast(zones_description_plagesvivantes.longueur as decimal)*1000 as Longueur_transect_en_metre,
   zones_description_plagesvivantes.secteur as Point_GPS_transects,
   
@@ -49,9 +46,5 @@ left join dico_species on dico_species.speciepk = observations_abondances.specie
 
 WHERE 
 observations.protocolefk = 12
--- and groupes.anneescol = '2022'
---and dico_academies.name in ('LILLE', 'AMIENS')
 and users.email not in('vne5@yopmail.com')
---AND dico_etablissements.zipcode LIKE '93%'
 and observations_abondances.abondance > 0
-

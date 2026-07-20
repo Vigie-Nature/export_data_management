@@ -3,14 +3,6 @@ SELECT
    observations.date AS session_date,
    zones.zonepk AS site_id,
    groupes.structurefk AS structure_id,
---   users.nom AS Nom_enseignant,
---   users.prenom AS Prenom_enseignant,
---   groupes.anneescol AS Annee_scolaire,
---   groupes.name AS Nom_classe,
---   groupes.niveau AS Niveau,
---   observateurs.name AS Nom_groupe,
---   groupes.effectifs AS Nombre_eleves,
-   --dico_structures.no_uai as Numero_UAI,
    dico_structures.name AS Nom_etablissement,
    dico_structures.zipcode AS Code_postal_etablissement,
    dico_structures.city AS Ville_etablissement,
@@ -29,8 +21,6 @@ SELECT
    observations_abondances.infos_complementaires->'abondances_details'->'face_1' as Abondance_face_Est,
    observations_abondances.infos_complementaires->'abondances_details'->'face_2' as Abondance_face_Sud,
    observations_abondances.infos_complementaires->'abondances_details'->'face_3' as Abondance_face_Ouest,
-   -- Informations issues de la saisie des donn?es
-   --Pour arbre ombrage : on commence par transformer le JSON en VARCHAR puis on enl?ve les guillements et enfin on transforme en integer pour faire la correspondance avec le dico_label
    (SELECT label
    FROM dico_labels
    WHERE dico_labels.valeur=cast(replace(cast(zones_placettes.environnement->'ombre_face' as varchar),'"','' ) as int)
@@ -41,7 +31,7 @@ SELECT
    (case cast(zones_placettes.environnement->'ombre_face_orientation' -> '2' -> 'value' as bool) WHEN TRUE THEN 'Oui' ELSE 'Non' END) as Ombre_face_Sud,
    (case cast(zones_placettes.environnement->'ombre_face_orientation' -> '3' -> 'value' as bool) WHEN TRUE THEN 'Oui' ELSE 'Non' END) as Ombre_face_Ouest,
    
-   -- Informations issues de la description de la zone d'observation
+
    (SELECT label
    FROM dico_labels
    WHERE dico_labels.valeur=zones_description_lichen.zone_pietonne

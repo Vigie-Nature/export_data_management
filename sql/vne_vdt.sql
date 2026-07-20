@@ -10,7 +10,7 @@ SELECT  DISTINCT
       zones.latitude  AS  Latitude,
       zones.longitude  AS  Longitude,
       CONCAT  (LEFT  (zones_placettes.name,  10),  RIGHT  (zones_placettes.name,  7))  AS  Num_quadrat,
-      --observations_abondances.nom_espece  AS  Espece,
+
       dico_species.details_espece  AS  taxon,
       dico_species.classe_espece  AS  Age,
       CASE    WHEN  observations_abondances.abondance>0  THEN  observations_abondances.abondance  else  0  end  as  taxon_count,
@@ -97,6 +97,4 @@ WHERE
 observations.protocolefk  =  4
 and  zones_placettes.placettepk  =  observations_abondances.placettefk
 and  users.email  not  in('vne5@yopmail.com')
---and  groupes.anneescol  =  '2019'
---AND  dico_etablissements.zipcode  LIKE  '93%'
 

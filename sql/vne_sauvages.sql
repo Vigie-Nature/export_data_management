@@ -17,10 +17,9 @@ SELECT DISTINCT
    WHERE dico_labels.valeur=zones_description_sauvages.cote_rue
    AND t='zones_description_fleurs'
    AND champ='cote_rue') AS Cote_rue,
-   --observations_abondances.nom_espece AS Espece,
+
    dico_species.nom_espece AS taxon,
    observations_abondances.environnement_sauvages as Habitat
-   -- CONCAT_JSON_MULTIPLE( observations_abondances.environnement_sauvages, ('value')::varchar, ('true')::varchar) as Environnement
 
 FROM observations
 LEFT JOIN observateurs ON observations.observateurfk = observateurs.observateurpk
@@ -38,5 +37,3 @@ left join dico_species on dico_species.speciepk = observations_abondances.specie
 WHERE
 observations.protocolefk = 5
 and users.email not in('vne5@yopmail.com')
---and groupes.anneescol = '2019'
---AND dico_etablissements.zipcode LIKE '93%'

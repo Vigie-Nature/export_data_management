@@ -87,7 +87,4 @@ left join dico_academies on dico_academies.academiepk = dico_structures.academie
 WHERE
 observations.protocolefk = 2
 and users.email not in('vne5@yopmail.com')
---and groupes.anneescol = '2019'
---AND dico_etablissements.zipcode LIKE '93%'
---and observations_abondances.abondance > 0
 

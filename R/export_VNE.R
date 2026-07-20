@@ -12,7 +12,7 @@ data_queries <- c(
   "oiseaux",
   "sauvages",
   "vdt",
-  "spipoll_VNE",
+  "spipoll",
   "biolit",
   "lichens",
   "participation_observations"
@@ -23,7 +23,7 @@ for (i in seq_along(data_queries)) {
   cat(paste("Importation des données", data_queries[i]))
 
   # import file from database ----
-  query <- read_sql_query(paste0("sql/vne_", data_queries[i], ".sql"))
+  query <- read_sql_query(paste0("sql/vne_", data_queries[i], ".sql"), encoding = "UTF-8")
   imported_file <- import_from_vne(query)
   cat("       ok\n")
 
@@ -67,7 +67,7 @@ for (i in seq_along(data_queries)) {
   file_to_save_name <- paste0("data/export_vne_", data_queries[i], ".csv")
   data.table::fwrite(imported_file_geometry, file = file_to_save_name)
   # send the file
-  upload_file_to_server(file_to_save_name, "", "Vigie-Nature/")
+  #upload_file_to_server(file_to_save_name, "", "Vigie-Nature/")
   # remove file after upload
-  file.remove(file_to_save_name)
+  #file.remove(file_to_save_name)
 }

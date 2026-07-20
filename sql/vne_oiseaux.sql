@@ -9,7 +9,6 @@ SELECT
    dico_academies.name as Academie,
    zones.latitude AS Latitude,
    zones.longitude AS Longitude,
-   --observations_abondances.nom_espece AS Espece,
    dico_species.nom_espece AS taxon,
    observations_abondances.speciefk AS speciefk,
    observations_abondances.abondance AS taxon_count,
@@ -88,6 +87,3 @@ left join dico_species on dico_species.speciepk = observations_abondances.specie
 WHERE
 observations.protocolefk = 1
 and users.email not in('vne5@yopmail.com')
---and groupes.anneescol = '2019'
---AND dico_etablissements.zipcode LIKE '93%'
---and observations_abondances.abondance > 0
