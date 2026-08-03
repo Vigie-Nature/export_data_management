@@ -5,5 +5,5 @@
 .env
 .Renviron
 *.Rproj
-
+*.csv
 data/

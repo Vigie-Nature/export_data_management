@@ -1,12 +1,12 @@
 #' Export a plat des donnees de Qubs
 #'
 #' @description
-#' La fonction permet d'extraire les donnees de Qubsen via une requete SQL
+#' La fonction permet d'extraire les donnees de chacun des protocoles de Qubs via des requetes SQL
 #'
 #' @param x a `numeric` vector
 #'
-#' @return Un `data.frame` pour chacun des protocoles de qubs, tels que configurés pour les exports a plat standard
-#' Chaque ligne du tableau représente soit une collection (session) vide sans organisme observé, soit une observation avec photo
+#' @return Un `data.frame` comprenant un export à plat des données Birdlab
+#' Chaque ligne du tableau représente l'action d'une espèce
 #'
 #' @export
 #'
@@ -20,11 +20,10 @@ export_qubs <- function(){
   ## data noctambules
   query <- read_sql_query(here::here("sql", "qubs_export_a_plat_noctambules_standard.sql"))
   dt_noctambules <- import_from_mosaic(query,
-                                       database_name = "qubs",
-                                       force_UTF8 = TRUE)
+                                   database_name = "qubs",
+                                   force_UTF8 = TRUE)
   assign("dt_noctambules", dt_noctambules, envir = .GlobalEnv)
   readr::write_excel_csv2(dt_noctambules, here::here("data", "export_qubs_noctambules.csv"))
-  upload_file_to_server(file_to_upload = "export_qubs_noctambules.csv", file_folder_local = "data/", file_folder_destination = "Vigie-Nature/")
   
   ## data escargots
   query <- read_sql_query(here::here("sql", "qubs_export_a_plat_escargots_standard.sql"))
@@ -33,7 +32,6 @@ export_qubs <- function(){
                                      force_UTF8 = TRUE)
   assign("dt_escargots", dt_escargots, envir = .GlobalEnv)
   readr::write_excel_csv2(dt_escargots, here::here("data", "export_qubs_escargots.csv"))
-  upload_file_to_server(file_to_upload = "export_qubs_escargots.csv", file_folder_local = "data/", file_folder_destination = "Vigie-Nature/")
   
   ## data aspifaune
   query <- read_sql_query(here::here("sql", "qubs_export_a_plat_aspifaune_standard.sql"))
@@ -42,7 +40,6 @@ export_qubs <- function(){
                                      force_UTF8 = TRUE)
   assign("dt_aspifaune", dt_aspifaune, envir = .GlobalEnv)
   readr::write_excel_csv2(dt_aspifaune, here::here("data", "export_qubs_aspifaune.csv"))
-  upload_file_to_server(file_to_upload = "export_qubs_aspifaune.csv", file_folder_local = "data/", file_folder_destination = "Vigie-Nature/")
   
   ## data vers de terre
   query <- read_sql_query(here::here("sql", "qubs_export_a_plat_vers_de_terre_standard.sql"))
@@ -51,7 +48,6 @@ export_qubs <- function(){
                                 force_UTF8 = TRUE)
   assign("dt_vers", dt_vers, envir = .GlobalEnv)
   readr::write_excel_csv2(dt_vers, here::here("data", "export_qubs_vers.csv"))
-  upload_file_to_server(file_to_upload = "export_qubs_vers.csv", file_folder_local = "data/", file_folder_destination = "Vigie-Nature/")
 
 }
 
@@ -83,5 +79,4 @@ export_qubs_social_events <- function(){
   
   assign("qubs_social", qubs_social, envir = .GlobalEnv)
   readr::write_excel_csv2(qubs_social, here::here("data", "export_qubs_comments.csv"))
-  upload_file_to_server(file_to_upload = "export_qubs_comments.csv", file_folder_local = "data/", file_folder_destination = "Vigie-Nature/")
 }
