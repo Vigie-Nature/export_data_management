@@ -14,12 +14,13 @@
 #' 
 
 library(dplyr)
+library(jsonlite)
 library(sf)
 
 export_propage <- function(){
 
   ## data noctambules
-  query <- read_sql_query(here::here("sql", "propage_export_a_plat_standard"))
+  query <- read_sql_query(here::here("sql", "propage_export_a_plat_standard.sql"))
   dt_propage <- import_from_mosaic(query,
                                   database_name = "espaces_verts",
                                   force_UTF8 = TRUE)
@@ -31,8 +32,8 @@ export_propage <- function(){
   # On identifie les sites parmi les restants qui n'ont pas une géométrie valide
   test_geo[which(test_geo)] = st_is_valid(st_as_sfc(site_geo[which(test_geo)], crs = 4326))
   # Les latitudes et longitudes des sites sont initialisées en NA
-  site_longitude = NA
-  site_latitude = NA
+  site_longitude = rep(NA, length(test_geo))
+  site_latitude = rep(NA, length(test_geo))
   # Pour les géométries valides on calcule la longitude...
   site_longitude[which(test_geo)] = st_coordinates(st_centroid(st_make_valid(st_as_sfc(site_geo[which(test_geo)], crs = 4326))))[,1]
   # ...et la latitude
@@ -42,7 +43,7 @@ export_propage <- function(){
   # Fonction pour renvoyer la longitude (coord = 1) ou latitude (coord = 2) moyenne
   # d'une géométrie (value) encodée en json
   geo_fromJSON <- function(value, coord){
-    return(mean(fromJSON(value)$coordinates[,coord], na.rm = TRUE))
+    return(mean(jsonlite::fromJSON(value)$coordinates[,coord], na.rm = TRUE))
   }
   # On récupère les géométries des transects
   transect_geo = dt_propage$transect_geometry
