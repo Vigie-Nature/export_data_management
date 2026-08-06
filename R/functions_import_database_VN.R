@@ -35,7 +35,7 @@ import_from_vne <- function(query){
 
   # define access parameters
   user = Sys.getenv("BDD_VNE_USER")
-  password = Sys.getenv("BDD_VNE_PASSWORD")
+  password = Sys.getenv("BDD_VNE_MDP")
   host = Sys.getenv("BDD_VNE_HOST")
   port = Sys.getenv("BDD_VNE_PORT")
   dbname = Sys.getenv("BDD_VNE_NAME")
