@@ -66,6 +66,9 @@ dt_spipoll <- dt_spipoll %>%
                               #intervals are open on the right
                               right = FALSE)))
 
+#convertir les chr strings vides en NA
+dt_spipoll$plante_precision[dt_spipoll$plante_precision == ""] <- NA
+
 return(dt_spipoll)
 
 }
@@ -96,6 +99,7 @@ social_spipoll$typeId[which(social_spipoll$typeId == 3)] <- "Nouvelle identifica
 social_spipoll$typeId[which(social_spipoll$typeId == 4)] <- "Commentaire"
 social_spipoll$typeId[which(social_spipoll$typeId == 8)] <- "Notification"
 social_spipoll$typeId[which(social_spipoll$typeId == 9)] <- "Ajout dénomination plus précise"
+social_spipoll$typeId[which(social_spipoll$typeId == 10)] <- "Réidentification automatique"
 
 return(export_spipoll_social_events())
 

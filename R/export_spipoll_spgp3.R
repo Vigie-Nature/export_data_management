@@ -52,6 +52,9 @@ export_spipoll <- function(){
                                 #intervals are open on the right
                                 right = FALSE)))
   
+  #convertir les chr strings vides en NA
+  dt_spipoll$plante_precision[dt_spipoll$plante_precision == ""] <- NA
+    
   assign("dt_spipoll", dt_spipoll, envir = .GlobalEnv)
   
 }
